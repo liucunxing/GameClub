@@ -6,8 +6,11 @@ import com.common.BaseField;
 import lombok.Data;
 
 @Data
-@TableName("employee")
-public class Employee extends BaseField {
-    @TableField("employeeName")
-    private String employeeName;
+@TableName("club")
+public class Club extends BaseField {
+    @TableField("uuid")
+    private String uuid;
+    @TableField("clubName")
+    private String clubName;
+
 }
