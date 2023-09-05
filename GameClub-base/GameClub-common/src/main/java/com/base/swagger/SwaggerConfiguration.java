@@ -30,8 +30,8 @@ public class SwaggerConfiguration {
     private ApiInfo buildApiInfo() {
         Contact contact = new Contact("Lcx微服务架构","","");
         return new ApiInfoBuilder()
-                .title("微服务基础框架-平台管理API文档")
-                .description("微服务基础框架后台api")
+                .title("GameClub-平台管理API文档")
+                .description("GameClub后台api")
                 .contact(contact)
                 .version("1.0.0").build();
     }

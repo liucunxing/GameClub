@@ -12,7 +12,7 @@
     <artifactId>GameClub-service</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>GameClub-service-user</module>
+        <module>GameClub-service-order</module>
     </modules>
 
     <properties>

@@ -8,8 +8,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 @MapperScan(basePackages = "com.base.mapper")
 @EnableDiscoveryClient
-public class UserApplication {
+public class OrderApplication {
     public static void main(String[] args) {
-        SpringApplication.run(UserApplication.class,args);
+        SpringApplication.run(OrderApplication.class,args);
     }
 }
