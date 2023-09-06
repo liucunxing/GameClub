@@ -1,6 +1,7 @@
 package com.base.exception;
 
 
+import com.common.AppHttpCodeEnum;
 import com.common.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,7 +13,6 @@ import java.util.Date;
 @ControllerAdvice  //控制器增强类
 @Slf4j
 public class ExceptionCatch {
-
     /**
      * 处理不可控异常
      * @param e
@@ -25,6 +25,13 @@ public class ExceptionCatch {
         log.error("catch exception:{}",e.getMessage());
         Date date = new Date();
         return ResponseResult.error("服务器内部发生错误" + date);
+    }
+    @ExceptionHandler(MyLoginException.class)
+    @ResponseBody
+    public ResponseResult exception(MyLoginException e){
+        e.printStackTrace();
+        log.error("catch exception:{}",e.getMessage());
+        return ResponseResult.errorResult(AppHttpCodeEnum.USER_NOLOGIN);
     }
 
 }

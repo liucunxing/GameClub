@@ -39,4 +39,12 @@ public class ResponseResult<T> {
     public static <T> ResponseResult<T> error(Integer code,String msg){
         return new ResponseResult(code,msg,null);
     }
+
+
+    public static ResponseResult errorResult(AppHttpCodeEnum enums, String msg) {
+        return new ResponseResult(enums.getCode(), msg);
+    }
+    public static ResponseResult errorResult(AppHttpCodeEnum enums) {
+        return new ResponseResult(enums.getCode(),enums.getErrorMessage());
+    }
 }

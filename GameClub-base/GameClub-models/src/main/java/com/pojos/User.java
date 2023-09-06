@@ -10,6 +10,8 @@ import lombok.Data;
 public class User extends BaseField {
     @TableField("name")
     private String name;
+    @TableField("salt")
+    private String salt;
     @TableField("telNumber")
     private String telNumber;
     @TableField("password")
