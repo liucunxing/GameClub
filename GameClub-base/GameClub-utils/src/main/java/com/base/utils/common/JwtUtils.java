@@ -5,24 +5,23 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 @Component
 public class JwtUtils {
     private static String sign = "356yrhtgbwq2";
     private static long time = 3600000;
 
-    public static String createJwt(long id){
-        JwtBuilder builder = Jwts.builder();
-        String jwtToken = builder
+    public static String createJwt(Map<String,String> claims){
+        JwtBuilder builder = Jwts.builder()
                 .setHeaderParam("typ","JWT")
                 .setHeaderParam("alg","HS256")
-                .claim("userId",id)
                 .setSubject("userToken")
                 .setExpiration(new Date(System.currentTimeMillis() + time))
-                .setId(UUID.randomUUID().toString())
-                .signWith(SignatureAlgorithm.HS256,sign)
+                .setId(UUID.randomUUID().toString());
+        claims.forEach(builder::claim);
+        return builder.signWith(SignatureAlgorithm.HS256,sign)
                 .compact();
-        return jwtToken;
     }
     public static Claims parseJwt(HttpServletRequest request){
         String token = request.getHeader("Authorization");

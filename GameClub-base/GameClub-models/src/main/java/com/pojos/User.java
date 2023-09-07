@@ -21,5 +21,5 @@ public class User extends BaseField {
     @TableField("sex")
     private boolean sex;
     @TableField("category")
-    private int category;
+    private Integer category;
 }

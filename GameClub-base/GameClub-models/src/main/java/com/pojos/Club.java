@@ -12,5 +12,7 @@ public class Club extends BaseField {
     private String uuid;
     @TableField("clubName")
     private String clubName;
+    @TableField("iconUrl")
+    private String iconUrl;
 
 }
