@@ -1,6 +1,5 @@
 package com.base.service.Impl;
 
-import com.alibaba.nacos.common.utils.MD5Utils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.base.mapper.UserMapper;
@@ -11,10 +10,9 @@ import com.common.ResponseResult;
 import com.dto.UserDto.CreateUserDto;
 import com.dto.UserDto.loginDto;
 import com.pojos.User;
+import io.jsonwebtoken.Claims;
 import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -61,10 +59,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             if(!pswd.equals(user.getPassword())){
                 return ResponseResult.errorResult(AppHttpCodeEnum.LOGIN_PASSWORD_ERROR);
             }
-            String token = JwtUtils.createJwt(user.getId());
-            Map<String,String> map = new HashMap<>();
-            map.put("token",token);
-            return ResponseResult.success("登录成功",map);
+
+            Map<String,String> claims = new HashMap<>();
+            claims.put("userId",user.getId().toString());
+            claims.put("category",user.getCategory().toString());
+            claims.put("userName", user.getName());
+            String token = JwtUtils.createJwt(claims);
+
+            Map<String,String> resMap = new HashMap<>();
+            resMap.put("token",token);
+            return ResponseResult.success("登录成功",resMap);
         }
         return ResponseResult.error("请输入验证信息");
     }

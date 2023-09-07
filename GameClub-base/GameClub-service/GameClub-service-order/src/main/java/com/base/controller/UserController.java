@@ -18,6 +18,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -49,6 +51,12 @@ public class UserController {
     public ResponseResult getId(){
         Claims claims = authenticationFacade.getUserClaims();
         Object userId = claims.get("userId");
-        return ResponseResult.success(userId);
+        Object category = claims.get("category");
+        Object userName = claims.get("userName");
+        Map<String,Object> map = new HashMap<>();
+        map.put("userId",userId);
+        map.put("category",category);
+        map.put("userName",userName);
+        return ResponseResult.success(map);
     }
 }
