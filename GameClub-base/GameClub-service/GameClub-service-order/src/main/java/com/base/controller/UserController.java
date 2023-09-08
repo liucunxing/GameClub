@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,5 +60,10 @@ public class UserController {
         map.put("category",category);
         map.put("userName",userName);
         return ResponseResult.success(map);
+    }
+    @PostMapping("/testUpload")
+    @ApiOperation("测试上传头像")
+    public ResponseResult testUpload(@RequestPart("file") MultipartFile multipartFile) throws IOException {
+        return userService.getAvaterUrl(multipartFile);
     }
 }
