@@ -20,6 +20,8 @@ public class User extends BaseField {
     private int age;
     @TableField("sex")
     private boolean sex;
+    @TableField("avaterUrl")
+    private String avaterUrl;
     @TableField("category")
     private Integer category;  //1.系统管理员  2.club创始人 3.club成员 4.club考官  5.普通用户
 }
