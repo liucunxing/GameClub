@@ -10,7 +10,7 @@ import java.util.UUID;
 @Component
 public class JwtUtils {
     private static String sign = "356yrhtgbwq2";
-    private static long time = 3600000;
+    private static long time = 3600000; //毫秒
 
     public static String createJwt(Map<String,String> claims){
         JwtBuilder builder = Jwts.builder()
