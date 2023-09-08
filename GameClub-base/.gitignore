@@ -1,8 +1,10 @@
 # Ignore target directory
-/target/
+/target/*
 
+/target/classes/*
 # Ignore IDE files
-/.idea/*.xml
+/.idea/libraries/*.xml
 .vscode/
 *.txt
 *.iml
+/.idea/*.xml
