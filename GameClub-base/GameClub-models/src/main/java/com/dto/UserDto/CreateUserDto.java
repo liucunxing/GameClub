@@ -14,5 +14,6 @@ public class CreateUserDto {
     private String password;
     private int age;
     private boolean sex;
+    private String userAvater;
     private int category;
 }

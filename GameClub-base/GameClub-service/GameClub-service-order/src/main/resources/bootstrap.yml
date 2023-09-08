@@ -11,6 +11,10 @@ spring:
         server-addr: 47.113.144.107:8848
         file-extension: yml
         enabled: true
+ss3Prefix:
+  userAvater: http://47.113.144.107/GameClubPic/userAvater/
+  clubIcon: http://47.113.144.107/GameClubPic/clubIcon/
+
 #  datasource:
 #    type: com.alibaba.druid.pool.DruidDataSource
 #    driver-class-name: com.mysql.jdbc.Driver
