@@ -1,6 +1,7 @@
 # Ignore target directory
 /target/*
 
+/target/classes/*
 # Ignore IDE files
 /.idea/libraries/*.xml
 .vscode/
