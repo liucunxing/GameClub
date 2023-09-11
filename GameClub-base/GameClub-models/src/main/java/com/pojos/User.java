@@ -23,6 +23,6 @@ public class User extends BaseField {
     @TableField("avaterUrl")
     private String avaterUrl;
     @TableField("category")
-    private Integer category;  //1.系统管理员  2.club创始人 3.club成员 4.club考官  5.普通用户
+    private Integer category;  //1.系统管理员  2.club创始人 3.club考官 4.club技术陪  5.club娱乐陪  6.点单用户
 }
 

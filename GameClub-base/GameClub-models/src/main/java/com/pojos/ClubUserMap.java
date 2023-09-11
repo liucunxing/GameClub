@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import java.util.Date;
 
 @TableName("clubusermap")
 @Data
@@ -17,4 +18,8 @@ public class ClubUserMap {
     private Long userId;
     @TableField(value = "category")
     private Integer category;
+    @TableField(value = "joinTime")
+    private Date joinTime;
+    @TableField(value = "orderCount")
+    private int orderCount;
 }
