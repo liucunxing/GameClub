@@ -2,6 +2,7 @@ package com.base.config;
 
 import com.base.Interceptor.TokenInterceptor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -12,6 +13,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration registration = registry.addInterceptor(new TokenInterceptor());
         registration.addPathPatterns("/**");
-
+    }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**") // 所有接口
+                .allowCredentials(true) // 是否发送 Cookie
+                .allowedOrigins("*")// 支持域
+                .allowedMethods(new String[]{"GET", "POST", "PUT", "DELETE"}) // 支持方法
+                .allowedHeaders("*")
+                .exposedHeaders("*");
     }
 }
