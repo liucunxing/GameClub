@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @TableName("category")
-public class category {
+public class Category {
     @TableField("id")
     private Integer id;
     @TableField("categoryName")
