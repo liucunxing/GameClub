@@ -33,4 +33,6 @@ public class Exam {
     private long examinerId;
     @TableField("status")
     private int status; //考核状态  1-等待考核  2-考核通过  3-考核未通过
+    @TableField("clubUUID")
+    private String clubUUID;
 }
