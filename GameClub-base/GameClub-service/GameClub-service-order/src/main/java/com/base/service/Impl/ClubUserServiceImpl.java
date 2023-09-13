@@ -51,7 +51,7 @@ public class ClubUserServiceImpl extends ServiceImpl<ClubUserMapper, ClubUserMap
         LambdaQueryWrapper<Exam> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Exam::getUserId,userId).eq(Exam::getClubUUID,dto.getClubUUID());
         if(examMapper.selectOne(wrapper)!=null){
-            return ResponseResult.error("您与预约过该俱乐部考核");
+            return ResponseResult.error("您已预约过该俱乐部考核");
         }
         if(StringUtils.isEmpty(dto.getDevice()) || StringUtils.isEmpty(dto.getGameArea()) || StringUtils.isEmpty(dto.getGameId())){
             return ResponseResult.error("个人信息不可为空");

@@ -18,10 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -74,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
             Map<String, String> claims = new HashMap<>();
             claims.put("userId", user.getId().toString());
-            claims.put("category", user.getRole().toString());
+            claims.put("role", user.getRole().toString());
             claims.put("userName", user.getName());
             String token = JwtUtils.createJwt(claims);
 

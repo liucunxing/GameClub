@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>GameClub-service-order</module>
+        <module>GameClub-service-user</module>
     </modules>
 
     <properties>
