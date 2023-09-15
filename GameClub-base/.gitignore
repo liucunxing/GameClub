@@ -8,3 +8,4 @@
 *.txt
 *.iml
 /.idea/*.xml
+*.class
