@@ -4,6 +4,7 @@ package com.base.exception;
 import com.common.AppHttpCodeEnum;
 import com.common.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +26,14 @@ public class ExceptionCatch {
         log.error("catch exception:{}",e.getMessage());
         Date date = new Date();
         return ResponseResult.error("服务器内部发生错误" + date);
+    }
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseBody
+    public ResponseResult exception(AccessDeniedException e){
+        e.printStackTrace();
+        log.error("catch exception:{}",e.getMessage());
+        Date date = new Date();
+        return ResponseResult.error(e.getMessage() + date);
     }
     @ExceptionHandler(MyLoginException.class)
     @ResponseBody

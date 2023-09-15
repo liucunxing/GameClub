@@ -3,6 +3,7 @@ package com.base.controller;
 import com.base.myInterface.Authorize;
 import com.base.myInterface.NoAuthorize;
 import com.base.service.AuthenticationFacade;
+import com.base.service.IMenuService;
 import com.base.service.IUserService;
 import com.common.ResponseResult;
 import com.dto.UserDto.CreateUserDto;
@@ -12,11 +13,13 @@ import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,6 +30,8 @@ public class UserController {
     @Autowired
     private IUserService userService;
     private final AuthenticationFacade authenticationFacade;
+    @Autowired
+    private IMenuService menuService;
 
     public UserController(AuthenticationFacade authenticationFacade) {
         this.authenticationFacade = authenticationFacade;
@@ -37,6 +42,10 @@ public class UserController {
     public ResponseResult<User> login(@RequestBody CreateUserDto dto){
         return userService.registe(dto);
     }
+    @GetMapping("/logout测试")
+    public ResponseResult logout(){
+        return userService.logout();
+    }
 
     @PostMapping("/login")
     @ApiOperation("login测试")
@@ -46,6 +55,7 @@ public class UserController {
     }
     @PostMapping("/parseToken")
     @ApiOperation("parseToken测试")
+    @PreAuthorize("hasAuthority('Club:AddClubUser')")
     public ResponseResult getId(){
         Claims claims = authenticationFacade.getUserClaims();
         Object userId = claims.get("userId");
@@ -61,5 +71,10 @@ public class UserController {
     @ApiOperation("测试上传头像")
     public ResponseResult testUpload(@RequestPart("file") MultipartFile multipartFile) throws IOException {
         return userService.getAvaterUrl(multipartFile);
+    }
+    @GetMapping("/testGetPerms")
+    @ApiOperation("测试获取perms")
+    public ResponseResult getPerms(Long userId){
+        return ResponseResult.success(menuService.getMenuPerms(userId));
     }
 }
