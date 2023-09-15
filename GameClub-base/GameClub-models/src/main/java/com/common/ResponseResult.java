@@ -47,4 +47,8 @@ public class ResponseResult<T> {
     public static ResponseResult errorResult(AppHttpCodeEnum enums) {
         return new ResponseResult(enums.getCode(),enums.getErrorMessage());
     }
+
+    public static ResponseResult success(int value, String str) {
+        return new ResponseResult(value,str);
+    }
 }

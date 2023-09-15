@@ -4,7 +4,9 @@ package com.base.exception;
 import com.common.AppHttpCodeEnum;
 import com.common.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,15 +34,13 @@ public class ExceptionCatch {
     public ResponseResult exception(AccessDeniedException e){
         e.printStackTrace();
         log.error("catch exception:{}",e.getMessage());
-        Date date = new Date();
-        return ResponseResult.error(e.getMessage() + date);
+        return ResponseResult.success(HttpStatus.FORBIDDEN.value(),"您的权限不足");
     }
-    @ExceptionHandler(MyLoginException.class)
+    @ExceptionHandler(BadCredentialsException.class)
     @ResponseBody
-    public ResponseResult exception(MyLoginException e){
+    public ResponseResult exception(BadCredentialsException e){
         e.printStackTrace();
         log.error("catch exception:{}",e.getMessage());
-        return ResponseResult.errorResult(AppHttpCodeEnum.USER_NOLOGIN);
+        return ResponseResult.success(HttpStatus.UNAUTHORIZED.value(),"用户信息验证失败，请重新登录");
     }
-
 }

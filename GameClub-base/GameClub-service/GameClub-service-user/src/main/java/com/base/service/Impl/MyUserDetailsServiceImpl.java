@@ -29,7 +29,7 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         User user = userService.getUser(name);
         if(user == null){
-            throw new UsernameNotFoundException("用户名或密码错误");
+            throw new UsernameNotFoundException("用户不存在");
         }
         //查询对应的权限信息
         List<String> list = menuService.getMenuPerms(Long.valueOf(user.getId()));

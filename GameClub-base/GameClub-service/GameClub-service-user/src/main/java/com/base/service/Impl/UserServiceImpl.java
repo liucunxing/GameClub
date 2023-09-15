@@ -8,6 +8,7 @@ import com.base.mapper.UserMapper;
 import com.base.service.IUserService;
 //import com.base.service.LoginUser;
 import com.base.utils.common.JwtUtils;
+import com.base.utils.common.RedisUtils;
 import com.common.ResponseResult;
 import com.dto.UserDto.CreateUserDto;
 import com.dto.UserDto.loginDto;
@@ -16,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,7 +43,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisUtils redisUtils;
 
     @Override
     public ResponseResult<User> registe(CreateUserDto dto) {
@@ -84,7 +84,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             claims.put("userName", loginUser.getUser().getName());
             String token = JwtUtils.createJwt(claims);
             String key = "userId:"+id;
-            redisTemplate.opsForValue().set(key,loginUser);
+            redisUtils.set(key,loginUser);
             Map<String, String> resMap = new HashMap<>();
             resMap.put("token", token);
             return ResponseResult.success("登录成功", resMap);
@@ -117,7 +117,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         Integer id = loginUser.getUser().getId();
         //删除redis的值
-        redisTemplate.delete("userId:"+id);
+        redisUtils.delete("userId:"+id);
         return ResponseResult.success("注销成功");
     }
 }

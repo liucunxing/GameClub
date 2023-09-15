@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,13 +20,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    private LoginSuccessHandler loginSuccessHandler;
-    @Autowired
-    private LoginFailureHandler loginFailureHandler;
-    @Autowired
     private MyUserDetailsServiceImpl myUserDetailsService;
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+
     private static final String URL_WHITRLIST[] = {
             "/api/user/login", "/login", "/logout", "/css/**", "/js/**", "/index.html", "favicon.ico", "/doc.html",
             "/webjars/**", "/swagger-resources/**", "/v2/api-docs/**", "/swagger-ui.html", "configuration/ui","/api/user/getPerms"
@@ -49,11 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .csrf()
         .disable()
-        //登陆登出配置
-        .formLogin()
-        .successHandler(loginSuccessHandler).failureHandler(loginFailureHandler)
         //session禁用
-        .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         //拦截规则
@@ -63,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .permitAll()
         .anyRequest()
         .authenticated();
-                //异常处理设置
+        //添加过滤器
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
