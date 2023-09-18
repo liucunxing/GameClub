@@ -12,7 +12,12 @@ public class UserRole {
     @TableId(value = "id", type = IdType.AUTO)
     private long id;
     @TableField("userId")
-    private long userId;
+    private Long userId;
     @TableField("roleId")
     private Integer roleId;
+
+    public UserRole(Long userId, Integer roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
+    }
 }

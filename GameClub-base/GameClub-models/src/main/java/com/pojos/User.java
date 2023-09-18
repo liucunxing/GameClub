@@ -1,17 +1,18 @@
 package com.pojos;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.common.BaseField;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @TableName("user")
-public class User extends BaseField {
+public class User{
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
     @TableField("name")
     private String name;
-    @TableField("salt")
-    private String salt;
     @TableField("telNumber")
     private String telNumber;
     @TableField("password")
@@ -22,5 +23,13 @@ public class User extends BaseField {
     private boolean sex;
     @TableField("avaterUrl")
     private String avaterUrl;
+    @TableField(value = "createUser" ,fill = FieldFill.INSERT)
+    private String createUser;
+    @TableField(value = "createTime" ,fill = FieldFill.INSERT)
+    private Date createTime;
+    @TableField(value = "updateUser" ,fill = FieldFill.INSERT_UPDATE)
+    private String updateUser;
+    @TableField(value = "updateTime" ,fill = FieldFill.INSERT_UPDATE)
+    private Date updateTime;
 }
 

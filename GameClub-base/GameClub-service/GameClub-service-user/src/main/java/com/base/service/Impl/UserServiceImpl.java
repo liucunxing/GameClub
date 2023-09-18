@@ -5,14 +5,15 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.base.filter.LoginUser;
 import com.base.mapper.UserMapper;
+import com.base.mapper.UserRoleMapper;
 import com.base.service.IUserService;
-//import com.base.service.LoginUser;
 import com.base.utils.common.JwtUtils;
 import com.base.utils.common.RedisUtils;
 import com.common.ResponseResult;
 import com.dto.UserDto.CreateUserDto;
 import com.dto.UserDto.loginDto;
 import com.pojos.User;
+import com.pojos.UserRole;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -44,8 +44,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private AuthenticationManager authenticationManager;
     @Autowired
     private RedisUtils redisUtils;
-
+    @Autowired
+    private UserRoleMapper userRoleMapper;
     @Override
+    @Transactional
     public ResponseResult<User> registe(CreateUserDto dto) {
         User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getTelNumber, dto.getTelNumber()));
         if (one != null) {
@@ -54,18 +56,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = new User();
         BeanUtils.copyProperties(dto, user);
 
-        //get salt
-        byte[] s = new byte[1];
-        SecureRandom secureRandom = new SecureRandom();
-        secureRandom.nextBytes(s);
-        String salt = Base64.getEncoder().encodeToString(s);
-        user.setSalt(salt);
-        System.out.println(passwordEncoder.encode(dto.getPassword()));
         String pswd = passwordEncoder.encode(dto.getPassword());
         user.setPassword(pswd);
         //UploadUtils.uploadFile("D://" + dto.getUserAvater(), "/var/www/html/GameClubPic/userAvater/" + dto.getUserAvater());
-        user.setAvaterUrl(avaterUrl + dto.getUserAvater());
+        //user.setAvaterUrl(avaterUrl + dto.getUserAvater());
+        user.setAvaterUrl(null);
         baseMapper.insert(user);
+        user.setCreateUser(user.getId().toString());
+        user.setUpdateUser(user.getId().toString());
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getId,user.getId());
+        baseMapper.update(user,wrapper);
+        for (Integer roleId: dto.getRoleIds()) {
+            userRoleMapper.insert(new UserRole(user.getId(),roleId));
+        }
         return ResponseResult.success("注册成功", user);
     }
 
@@ -81,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             //比对成功后会返回loginUser（UserDetail实现类）对象，里面封装了user的全部信息
             LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
             //认证通过生成jwt，并把用户信息存入redis
-            Integer id = loginUser.getUser().getId();
+            Long id = loginUser.getUser().getId();
             Map<String, String> claims = new HashMap<>();
             claims.put("userId", id.toString());
             claims.put("userName", loginUser.getUser().getName());
@@ -118,7 +122,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //获取SecurityContextHolder信息中的id
         Authentication authentication = (UsernamePasswordAuthenticationToken)SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        Integer id = loginUser.getUser().getId();
+        Long id = loginUser.getUser().getId();
         //删除redis的值
         redisUtils.delete("userId:"+id);
         return ResponseResult.success("注销成功");

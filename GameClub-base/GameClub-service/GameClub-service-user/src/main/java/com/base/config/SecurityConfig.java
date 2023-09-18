@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationEntryPointImpl authenticationEntryPoint;
 
     private static final String URL_WHITRLIST[] = {
-            "/api/user/login", "/css/**", "/js/**", "/index.html", "favicon.ico", "/doc.html",
+            "/api/user/login","/api/user/register" ,"/css/**", "/js/**", "/index.html", "favicon.ico", "/doc.html",
             "/webjars/**", "/swagger-resources/**", "/v2/api-docs/**", "/swagger-ui.html", "configuration/ui","/api/user/getPerms"
     };
     @Override

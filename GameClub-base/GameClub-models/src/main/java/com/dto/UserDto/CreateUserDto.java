@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,5 +17,5 @@ public class CreateUserDto {
     private int age;
     private boolean sex;
     private String userAvater;
-    private int category;
+    private List<Integer> roleIds;
 }

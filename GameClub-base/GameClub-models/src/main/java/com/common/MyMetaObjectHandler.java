@@ -31,8 +31,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         log.info("修改操作执行");
-        metaObject.setValue("createUser",getUser());
-        metaObject.setValue("createTime", new Date());
+        //metaObject.setValue("createUser",getUser());
+        //metaObject.setValue("createTime", new Date());
         metaObject.setValue("updateUser",getUser());
         metaObject.setValue("updateTime", new Date());
     }
@@ -40,6 +40,13 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if(servletRequestAttributes != null){
             HttpServletRequest request = servletRequestAttributes.getRequest();
+            //当请求时注册请求时，就不从jwt取角色信息，返回null
+            String requestURL = request.getRequestURL().toString();
+            String url = requestURL.substring(requestURL.indexOf("/api"));
+            if(url.equals("/api/user/register")){
+                return null;
+            }
+
             Claims claims = JwtUtils.parseJwt(request);
             return String.valueOf(claims.get("userId"));
         }

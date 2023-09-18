@@ -37,9 +37,9 @@ public class UserController {
         this.authenticationFacade = authenticationFacade;
     }
 
-    @PostMapping("/registe")
-    @ApiOperation("registe测试")
-    public ResponseResult<User> login(@RequestBody CreateUserDto dto){
+    @PostMapping("/register")
+    @ApiOperation("register测试")
+    public ResponseResult<User> register(@RequestBody CreateUserDto dto){
         return userService.registe(dto);
     }
     @GetMapping("/logout")
