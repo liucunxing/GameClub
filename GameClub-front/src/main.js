@@ -13,9 +13,7 @@ const instance = axios.create({
     timeout: 5000, // 请求超时时间
   });
 const app = createApp(App)
-
 app.config.globalProperties.$axios = instance;
-
 app.use(ElementPlus)
 app.use(createPinia())
 app.use(router)
