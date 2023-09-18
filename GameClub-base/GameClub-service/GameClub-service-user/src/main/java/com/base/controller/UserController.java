@@ -42,7 +42,7 @@ public class UserController {
     public ResponseResult<User> login(@RequestBody CreateUserDto dto){
         return userService.registe(dto);
     }
-    @GetMapping("/logout测试")
+    @GetMapping("/logout")
     public ResponseResult logout(){
         return userService.logout();
     }

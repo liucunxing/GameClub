@@ -72,12 +72,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public ResponseResult login(loginDto dto) {
         if (StringUtils.isNotBlank(dto.getTelNumber()) && StringUtils.isNotBlank(dto.getPassword())) {
+            //首先进行Authenticate方法认证，根据过滤器流程，当调用该方法后，会向后调用UserDetailService中的查询用户，并进行密码比对
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getName(),dto.getPassword());
             Authentication authenticate = authenticationManager.authenticate(authenticationToken);
             if(Objects.isNull(authenticate)){
                 return ResponseResult.error("登陆失败");
             }
+            //比对成功后会返回loginUser（UserDetail实现类）对象，里面封装了user的全部信息
             LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+            //认证通过生成jwt，并把用户信息存入redis
             Integer id = loginUser.getUser().getId();
             Map<String, String> claims = new HashMap<>();
             claims.put("userId", id.toString());

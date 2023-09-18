@@ -23,9 +23,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private MyUserDetailsServiceImpl myUserDetailsService;
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    @Autowired
+    private AuthenticationEntryPointImpl authenticationEntryPoint;
 
     private static final String URL_WHITRLIST[] = {
-            "/api/user/login", "/login", "/logout", "/css/**", "/js/**", "/index.html", "favicon.ico", "/doc.html",
+            "/api/user/login", "/css/**", "/js/**", "/index.html", "favicon.ico", "/doc.html",
             "/webjars/**", "/swagger-resources/**", "/v2/api-docs/**", "/swagger-ui.html", "configuration/ui","/api/user/getPerms"
     };
     @Override
@@ -57,6 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .authenticated();
         //添加过滤器
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
     }
 
     @Override
