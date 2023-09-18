@@ -1,7 +1,7 @@
 # Ignore target directory
-/target/*
+target/
 
-/target/classes/*
+/target/classes/*.yml
 # Ignore IDE files
 /.idea/libraries/*.xml
 .vscode/
@@ -10,3 +10,4 @@
 /.idea/*.xml
 *.class
 /target/classes/com/base/filter/*
+META-INF/
