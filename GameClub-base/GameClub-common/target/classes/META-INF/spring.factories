@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.base.swagger.SwaggerConfiguration,\
-  com.base.exception.ExceptionCatch,\
-  com.base.config.WebMvcConfig
