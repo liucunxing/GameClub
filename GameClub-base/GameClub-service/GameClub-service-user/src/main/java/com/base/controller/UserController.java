@@ -55,7 +55,7 @@ public class UserController {
     }
     @PostMapping("/parseToken")
     @ApiOperation("parseToken测试")
-    @PreAuthorize("hasAuthority('Club:AddClubUser1')")
+    @PreAuthorize("hasAuthority('Club:AddClubUser')")
     public ResponseResult getId(){
         Claims claims = authenticationFacade.getUserClaims();
         Object userId = claims.get("userId");

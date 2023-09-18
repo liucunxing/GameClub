@@ -13,7 +13,7 @@ public interface IUserService extends IService<User> {
     ResponseResult<User> registe(CreateUserDto dto);
     ResponseResult login(loginDto dto);
     ResponseResult getAvaterUrl(MultipartFile multipartFile) throws IOException;
-    User getUser(String name);
+    User getUser(String telNumber);
 
     ResponseResult logout();
 }

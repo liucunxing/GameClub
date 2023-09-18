@@ -73,7 +73,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public ResponseResult login(loginDto dto) {
         if (StringUtils.isNotBlank(dto.getTelNumber()) && StringUtils.isNotBlank(dto.getPassword())) {
             //首先进行Authenticate方法认证，根据过滤器流程，当调用该方法后，会向后调用UserDetailService中的查询用户，并进行密码比对
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getName(),dto.getPassword());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getTelNumber(),dto.getPassword());
             Authentication authenticate = authenticationManager.authenticate(authenticationToken);
             if(Objects.isNull(authenticate)){
                 return ResponseResult.error("登陆失败");
@@ -109,8 +109,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public User getUser(String name) {
-        return getOne(new LambdaQueryWrapper<User>().eq(User::getName,name));
+    public User getUser(String telNumber) {
+        return getOne(new LambdaQueryWrapper<User>().eq(User::getTelNumber,telNumber));
     }
 
     @Override

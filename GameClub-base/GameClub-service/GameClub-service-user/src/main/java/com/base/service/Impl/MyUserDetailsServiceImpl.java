@@ -26,8 +26,8 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private IMenuService menuService;
     @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        User user = userService.getUser(name);
+    public UserDetails loadUserByUsername(String telNumber) throws UsernameNotFoundException {
+        User user = userService.getUser(telNumber);
         if(user == null){
             throw new UsernameNotFoundException("用户不存在");
         }
