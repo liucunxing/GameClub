@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
-import { mainStore } from "../store/index";
-import { storeToRefs } from "pinia";
-const store = mainStore();
-const { userInfo } = storeToRefs(store);
+import { storeToRefs } from 'pinia';
+import { useCounterStoreForSetup } from '../store/index';
+// composition API模式
+const counterStoreForSetup = useCounterStoreForSetup();
+// 确保解构确保后的state具有响应式，要使用storeToRefs方法
+const { token,getToken } = storeToRefs(counterStoreForSetup);
+const { setToken } = counterStoreForSetup;
+
 import axios from "../axios/axios";
 const ruleFormRef = ref<FormInstance>();
 
@@ -30,7 +34,7 @@ const validatePassword = (rule: any, value: any, callback: any) => {
     callback();
   }
 };
-const validateUsername = (rule: any, value: any, callback: any) => {
+const validateTelNumber = (rule: any, value: any, callback: any) => {
   if (value === "") {
     callback(new Error("请输入账户"));
   } else {
@@ -42,27 +46,25 @@ const ruleForm = reactive({
   username: "",
   password: "",
   email: "",
-  phone: "",
+  telNumber: "",
   checkPass: "",
   age: "",
 });
 
 const rules = reactive<FormRules<typeof ruleForm>>({
   password: [{ validator: validatePassword, trigger: "blur" }],
-  username: [{ validator: validateUsername, trigger: "blur" }],
+  telNumber: [{ validator: validateTelNumber, trigger: "blur" }],
   email: [{ validator: checkEmail, trigger: "blur" }],
 });
 const loginData = ref({
-  username: "",
-  telNumber: "",
-  password: "string",
+  telNumber: "1",
+  password: "root",
 });
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      loginData.value.username = ruleForm.username;
-      loginData.value.telNumber = ruleForm.phone;
+      loginData.value.telNumber = ruleForm.telNumber;
       loginData.value.password = ruleForm.password;
       login(loginData);
       console.log("submit!");
@@ -73,21 +75,18 @@ const submitForm = (formEl: FormInstance | undefined) => {
   });
 };
 
-const login = (data: object) => {
-  axios
-    .post("api/user/login", loginData.value)
-    .then((res) => {
-      console.log(res);
-      const token = res.data.data.token;
-      //console.log(token);
-      store.changeToken(token);
-      const token2 = store.getToken();
-      console.log(token2);
-      console.log(store);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+const login = async  (data: object) => {
+  try {
+    const res = await axios.post("api/user/login", loginData.value);
+    console.log(res);
+    const token = res.data.data.token;
+    setToken(token);
+    console.log(token);
+    const token3 = token;
+    console.log(token3);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const resetForm = (formEl: FormInstance | undefined) => {
@@ -124,12 +123,12 @@ const resetForm = (formEl: FormInstance | undefined) => {
             class="demo-ruleForm"
             require-asterisk-position="right"
           >
-            <el-form-item required label="账号：" prop="username">
-              <el-input v-model.number="ruleForm.username" />
+            <el-form-item required label="账号：" prop="telNumber">
+              <el-input v-model.number="ruleForm.telNumber" />
             </el-form-item>
-            <el-form-item  label="手机：" prop="email">
+            <!--<el-form-item  label="手机：" prop="email">
               <el-input v-model.number="ruleForm.phone" />
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item required label="密码：" prop="password">
               <el-input
                 v-model="ruleForm.password"
