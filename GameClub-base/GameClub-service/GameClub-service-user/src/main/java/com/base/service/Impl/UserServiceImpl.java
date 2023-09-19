@@ -67,9 +67,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getId,user.getId());
         baseMapper.update(user,wrapper);
-        for (Integer roleId: dto.getRoleIds()) {
-            userRoleMapper.insert(new UserRole(user.getId(),roleId));
-        }
         return ResponseResult.success("注册成功", user);
     }
 

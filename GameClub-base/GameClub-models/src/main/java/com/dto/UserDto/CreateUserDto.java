@@ -17,5 +17,5 @@ public class CreateUserDto {
     private int age;
     private boolean sex;
     private String userAvater;
-    private List<Integer> roleIds;
+    //private List<Integer> roleIds;
 }
