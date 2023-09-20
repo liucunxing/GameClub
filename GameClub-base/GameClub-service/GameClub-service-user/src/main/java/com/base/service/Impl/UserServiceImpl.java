@@ -48,7 +48,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private UserRoleMapper userRoleMapper;
     @Override
     @Transactional
-    public ResponseResult<User> registe(CreateUserDto dto) {
+    public ResponseResult<User> register(CreateUserDto dto) {
         User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getTelNumber, dto.getTelNumber()));
         if (one != null) {
             return ResponseResult.error("该手机号用户已存在");
@@ -67,6 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getId,user.getId());
         baseMapper.update(user,wrapper);
+        userRoleMapper.insert(new UserRole(user.getId(),7));
         return ResponseResult.success("注册成功", user);
     }
 

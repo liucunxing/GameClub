@@ -40,7 +40,7 @@ public class UserController {
     @PostMapping("/register")
     @ApiOperation("register测试")
     public ResponseResult<User> register(@RequestBody CreateUserDto dto){
-        return userService.registe(dto);
+        return userService.register(dto);
     }
     @GetMapping("/logout")
     public ResponseResult logout(){
