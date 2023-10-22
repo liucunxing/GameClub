@@ -7,6 +7,7 @@ import com.dto.UserDto.loginDto;
 import com.pojos.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public interface IUserService extends IService<User> {

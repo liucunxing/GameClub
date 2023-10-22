@@ -7,6 +7,7 @@ import com.base.filter.LoginUser;
 import com.base.mapper.UserMapper;
 import com.base.mapper.UserRoleMapper;
 import com.base.service.IUserService;
+import com.base.utils.common.FileStorageUtils;
 import com.base.utils.common.JwtUtils;
 import com.base.utils.common.RedisUtils;
 import com.common.ResponseResult;
@@ -17,7 +18,6 @@ import com.pojos.UserRole;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,7 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -36,8 +39,8 @@ import java.util.Objects;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
-    @Value("${ss3Prefix.userAvater}")
-    private String avaterUrl;
+    @Autowired
+    private FileStorageUtils fileStorageUtils;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -58,9 +61,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         String pswd = passwordEncoder.encode(dto.getPassword());
         user.setPassword(pswd);
-        //UploadUtils.uploadFile("D://" + dto.getUserAvater(), "/var/www/html/GameClubPic/userAvater/" + dto.getUserAvater());
-        //user.setAvaterUrl(avaterUrl + dto.getUserAvater());
-        user.setAvaterUrl(null);
+
+        user.setAvaterUrl(dto.getUserAvater());
         baseMapper.insert(user);
         user.setCreateUser(user.getId().toString());
         user.setUpdateUser(user.getId().toString());
@@ -84,9 +86,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
             //认证通过生成jwt，并把用户信息存入redis
             Long id = loginUser.getUser().getId();
+
+            LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(UserRole::getUserId,id.toString());
+            UserRole userRole = userRoleMapper.selectOne(wrapper);
             Map<String, String> claims = new HashMap<>();
             claims.put("userId", id.toString());
             claims.put("userName", loginUser.getUser().getName());
+            claims.put("roleId",userRole.getRoleId().toString());
             String token = JwtUtils.createJwt(claims);
             String key = "userId:"+id;
             redisUtils.set(key,loginUser);
@@ -101,13 +108,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public ResponseResult getAvaterUrl(MultipartFile multipartFile) throws IOException {
         if (!multipartFile.isEmpty()) {
             String originalFilename = multipartFile.getOriginalFilename();
-            byte[] fileBytes = multipartFile.getBytes();
-            String localFilePath = "D://" + originalFilename;
-            Files.write(Paths.get(localFilePath), fileBytes);
-            return ResponseResult.success(originalFilename);
-
+            InputStream inputStream = multipartFile.getInputStream();
+            String s = fileStorageUtils.uploadImgFile("", originalFilename , inputStream);
+            return ResponseResult.success(s);
         }
-        return null;
+        return ResponseResult.error("图像上传失败");
     }
 
     @Override

@@ -14,5 +14,8 @@ public class Club extends BaseField {
     private String clubName;
     @TableField("iconUrl")
     private String iconUrl;
-
+    @TableField("ifBanner")
+    private Boolean ifBanner = false;
+    @TableField("status")
+    private int status = 2; //1-已创建 2-审核中 3-已解散
 }

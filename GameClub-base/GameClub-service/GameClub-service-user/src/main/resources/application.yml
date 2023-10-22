@@ -1,5 +1,11 @@
 spring:
   redis:
+    database: 0
     host: 47.113.144.107
     port: 6379
-    database: 0
+minio:
+  accessKey: minio
+  secretKey: minio123
+  bucket: gameclub
+  endpoint: http://47.113.144.107:9000
+  readPath: http://47.113.144.107:9000
