@@ -30,7 +30,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //获取token
         String token = request.getHeader("Authorization");
-        if (!StringUtils.hasText(token)) {
+        String requestURI = request.getRequestURI();
+        if (!StringUtils.hasText(token) || requestURI.contains("noAuth")) {
             filterChain.doFilter(request, response);
             return;
         }

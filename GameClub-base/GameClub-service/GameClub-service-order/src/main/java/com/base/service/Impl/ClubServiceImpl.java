@@ -1,7 +1,10 @@
 package com.base.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.base.mapper.ClubMapper;
 import com.base.mapper.ClubUserMapper;
@@ -9,9 +12,10 @@ import com.base.mapper.UserRoleMapper;
 import com.base.service.AuthenticationFacade;
 import com.base.service.IClubService;
 import com.base.utils.common.FileStorageUtils;
+import com.base.utils.common.RedisUtils;
+import com.common.PagedResult;
 import com.common.ResponseResult;
-import com.dto.ClubDto.ClubBannerDto;
-import com.dto.ClubDto.CreateClubDto;
+import com.dto.ClubDto.*;
 import com.pojos.Club;
 import com.pojos.ClubUserMap;
 import com.pojos.UserRole;
@@ -20,13 +24,17 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ClubServiceImpl extends ServiceImpl<ClubMapper, Club> implements IClubService {
@@ -36,10 +44,31 @@ public class ClubServiceImpl extends ServiceImpl<ClubMapper, Club> implements IC
     private UserRoleMapper userRoleMapper;
     @Autowired
     private FileStorageUtils fileStorageUtils;
+    @Autowired
+    private RedisUtils redisUtils;
 
     public ClubServiceImpl(AuthenticationFacade authenticationFacade, ClubUserMapper clubUserMapper) {
         this.authenticationFacade = authenticationFacade;
         this.clubUserMapper = clubUserMapper;
+    }
+
+    @Override
+    public ResponseResult<List<ClubDto>> getHotClub() {
+        Object hotClub = redisUtils.get("hotClub");
+        if(hotClub != null){
+            return ResponseResult.success((List<ClubDto>)hotClub);
+        }
+        LambdaQueryWrapper<Club> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Club::getStatus,1).orderByDesc(Club::getHotCount).last("Limit 6");
+        List<ClubDto> res = new ArrayList<>();
+        List<Club> clubs = baseMapper.selectList(wrapper);
+        clubs.stream().map(c->{
+            ClubDto d = new ClubDto();
+            BeanUtils.copyProperties(c,d);
+            return res.add(d);
+        }).collect(Collectors.toList());
+        redisUtils.set("hotClub",res,24);
+        return ResponseResult.success(res);
     }
 
     @Override
@@ -88,11 +117,19 @@ public class ClubServiceImpl extends ServiceImpl<ClubMapper, Club> implements IC
 
     @Override
     public ResponseResult<List<ClubBannerDto>> showClubBanners() {
-        List<ClubBannerDto> dtos = new ArrayList<>();
+        Object clubBanners = redisUtils.get("clubBanners");
+        if(clubBanners != null){
+            return ResponseResult.success((List<ClubBannerDto>) clubBanners);
+        }
         LambdaQueryWrapper<Club> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Club::getIfBanner,true);
+        wrapper.eq(Club::getStatus,1).eq(Club::getIfBanner,true);
         List<Club> clubs = baseMapper.selectList(wrapper);
-        BeanUtils.copyProperties(clubs,dtos);
+        List<ClubBannerDto> dtos = clubs.stream().map( club -> {
+            ClubBannerDto dto = new ClubBannerDto();
+            BeanUtils.copyProperties(club,dto);
+            return dto;
+        }).collect(Collectors.toList());
+        redisUtils.set("clubBanners",dtos,60);
         return ResponseResult.success(dtos);
     }
 
@@ -118,14 +155,23 @@ public class ClubServiceImpl extends ServiceImpl<ClubMapper, Club> implements IC
         return ResponseResult.success("设置轮播成功");
     }
 
-    public ResponseResult getAvaterUrl(MultipartFile multipartFile) throws IOException {
-        if (!multipartFile.isEmpty()) {
-            String originalFilename = multipartFile.getOriginalFilename();
-            InputStream inputStream = multipartFile.getInputStream();
-            String s = fileStorageUtils.uploadImgFile("", originalFilename , inputStream);
-            return ResponseResult.success(s);
+    @Override
+    public PagedResult<ClubListDto> getClubList(ClubQueryDto dto) {
+        var wrapper = getWrapper(dto);
+        Page<ClubListDto> page = new Page<>(dto.getPageIndex(),dto.getPageSize());
+        IPage<ClubListDto> pageResult = baseMapper.queryClubList(page,wrapper);
+        SimpleDateFormat formatt = new SimpleDateFormat("yyyy-mm-dd");
+
+        return new PagedResult<>(pageResult.getRecords(), pageResult.getTotal(), dto.getPageIndex(), dto.getPageSize());
+    }
+
+    private QueryWrapper<ClubListDto> getWrapper(ClubQueryDto dto){
+        var wrapper = new QueryWrapper<ClubListDto>();
+        wrapper.eq("c.status",1);
+        if(!StringUtils.isEmpty(dto.getClubName())){
+            wrapper.like("c.clubName",dto.getClubName());
         }
-        return ResponseResult.error("图像上传失败");
+        return wrapper;
     }
 
 }

@@ -6,12 +6,23 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/Index.vue')
+      component: () => import('../views/register.vue')
+    },
+   
+    {
+      path: '/homePage',
+      name: 'homePage',
+      component: () => import('../views/homePage.vue')
     },
     {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/register.vue')
+      path: '/userCenter',
+      name: 'userCenter',
+      component: () => import('../views/userCenter.vue')
+    },
+    {
+      path: '/clubCenter',
+      name: 'clubCenter',
+      component: () => import('../views/clubCenter.vue')
     }
   ]
 })

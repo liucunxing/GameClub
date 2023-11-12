@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String URL_WHITRLIST[] = {
             "/api/user/login","/api/user/register" ,"/css/**", "/js/**", "/index.html", "favicon.ico", "/doc.html",
-            "/webjars/**", "/swagger-resources/**", "/v2/api-docs/**", "/swagger-ui.html", "configuration/ui","/api/user/getPerms"
+            "/webjars/**", "/swagger-resources/**", "/v2/api-docs/**", "/swagger-ui.html", "configuration/ui","/**/noAuth/**"
     };
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

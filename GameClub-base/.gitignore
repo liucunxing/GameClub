@@ -11,4 +11,4 @@ target/
 *.class
 /target/classes/com/base/filter/*
 META-INF/
-/target/classes
+/target/classes/*.yml

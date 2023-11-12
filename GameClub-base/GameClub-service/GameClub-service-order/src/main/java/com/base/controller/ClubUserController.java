@@ -1,7 +1,5 @@
 package com.base.controller;
 
-import com.base.myInterface.Authorize;
-import com.base.myInterface.NoAuthorize;
 import com.base.service.IClubUserService;
 import com.common.PagedResult;
 import com.common.ResponseResult;
@@ -19,22 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/clubUser")
 @Api(value = "clubUser",tags = "clubUser")
-@Authorize
 public class ClubUserController {
     @Autowired
     private IClubUserService clubUserService;
     @PostMapping("/queryClubUserList")
-    @NoAuthorize
     public PagedResult<ClubUserListDto> queryClubUserList(@RequestBody ClubUserQueryDto dto){
         return clubUserService.queryClubUserList(dto);
     }
     @PostMapping("/appointExam")
-    @NoAuthorize
     public ResponseResult appointExam(@RequestBody AppointExamDto dto){
         return clubUserService.appointExam(dto);
     }
     @PostMapping("/updateExamStatus")
-    @NoAuthorize
     public ResponseResult updateExamStatus(@RequestBody UpdateExamStatusDto dto){
         return clubUserService.updateStatus(dto);
     }

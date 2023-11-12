@@ -37,18 +37,4 @@ public class JwtUtils {
         Claims claims = claimsJws.getBody();
         return claims;
     }
-    public static Boolean checkToken(HttpServletRequest request){
-        String token = request.getHeader("Authorization");
-        if(token == null){
-            return false;
-        }
-        try {
-            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(sign).parseClaimsJws(token);
-        }
-        catch (Exception e){
-            return false;
-        }
-
-        return true;
-    }
 }

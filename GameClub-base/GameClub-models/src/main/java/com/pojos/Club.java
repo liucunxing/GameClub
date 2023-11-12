@@ -18,4 +18,13 @@ public class Club extends BaseField {
     private Boolean ifBanner = false;
     @TableField("status")
     private int status = 2; //1-已创建 2-审核中 3-已解散
+    @TableField("hotCount")
+    private int hotCount;
+    @TableField("description")
+    private String description;
+    @TableField("announcePic")
+    private String announcePic;
+    @TableField("orderCount")
+    private String orderCount;
+
 }

@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateClubDto {
+public class ClubQueryDto {
     private String clubName;
-    private String description;
-    private String iconUrl;
-
+    private int pageIndex;
+    private int pageSize;
 }

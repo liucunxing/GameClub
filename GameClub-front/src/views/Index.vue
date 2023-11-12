@@ -95,18 +95,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
 };
 </script>
 <template>
-  <el-row :gutter="10" style="width: 100%">
-    <el-col
-      style="width: 100%; display: flex; justify-content: center"
-      :offset="10"
-      :xs="4"
-      :sm="8"
-      :md="12"
-      :lg="24"
-      :xl="24"
-    >
-      <div class="center-content">
-        <el-card style="width: 480px">
+  <div class="parent-container">
+<div class="center-content">
+        <el-card style="width: 480px;">
           <template #header>
             <div class="card-header">
               <span>欢迎来到GameClub游戏俱乐部</span>
@@ -145,40 +136,30 @@ const resetForm = (formEl: FormInstance | undefined) => {
           </el-form>
         </el-card>
       </div>
-    </el-col>
-  </el-row>
+  </div>
+      
 </template>
   
 <style scoped>
-.el-col {
-  border-radius: 4px;
+
+.parent-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
 }
 
 .center-content {
-  /* 添加居中内容的样式 */
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100%; /* 使内容垂直居中 */
-  width: auto;
 }
 
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
 .text {
   font-size: 14px;
 }
 
-.item {
-  margin-bottom: 18px;
-}
 </style>
   

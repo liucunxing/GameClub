@@ -1,4 +1,4 @@
-import './assets/main.css'
+
 import axios from 'axios';
 
 import { createApp } from 'vue'
@@ -12,6 +12,12 @@ const instance = axios.create({
     baseURL: 'http://localhost:8864/', // 设置API的基本URL
     timeout: 5000, // 请求超时时间
   });
+// const token = localStorage.getItem('token');
+// axios.interceptors.request.use(config => {
+//   config.headers.Authorization = 'token'; // 添加请求头
+//   return config;
+// });
+
 const app = createApp(App)
 app.config.globalProperties.$axios = instance;
 app.use(ElementPlus)

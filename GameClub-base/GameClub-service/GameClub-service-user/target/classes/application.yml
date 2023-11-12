@@ -3,6 +3,9 @@ spring:
     database: 0
     host: 47.113.144.107
     port: 6379
+  servlet:
+    multipart:
+      max-file-size: -1
 minio:
   accessKey: minio
   secretKey: minio123

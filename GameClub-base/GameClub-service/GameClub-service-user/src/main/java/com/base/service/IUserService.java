@@ -16,5 +16,5 @@ public interface IUserService extends IService<User> {
     ResponseResult getAvaterUrl(MultipartFile multipartFile) throws IOException;
     User getUser(String telNumber);
 
-    ResponseResult logout();
+    ResponseResult logout(long id);
 }

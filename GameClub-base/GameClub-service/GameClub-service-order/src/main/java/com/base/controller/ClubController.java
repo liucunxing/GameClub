@@ -1,29 +1,26 @@
 package com.base.controller;
 
-import com.base.myInterface.Authorize;
-import com.base.myInterface.NoAuthorize;
 import com.base.service.IClubService;
+import com.common.PagedResult;
 import com.common.ResponseResult;
-import com.dto.ClubDto.ClubBannerDto;
-import com.dto.ClubDto.CreateClubDto;
-import io.jsonwebtoken.Claims;
+import com.dto.ClubDto.*;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/club")
 @Api(value = "club",tags = "club")
-@Authorize
 public class ClubController {
     @Autowired
     private IClubService clubService;
+    @GetMapping("/noAuth/getHotClub")
+    public ResponseResult<List<ClubDto>> getHotClub(){
+        return clubService.getHotClub();
+    }
     @PostMapping("/createClub")
     public ResponseResult createClub(@RequestBody CreateClubDto dto){
         return clubService.createClub(dto);
@@ -33,8 +30,7 @@ public class ClubController {
     public ResponseResult<Boolean> verifyCreateClub(){
         return clubService.verifyCreateClub();
     }
-    @GetMapping("/showClubBanners")
-    @NoAuthorize
+    @GetMapping("/noAuth/showClubBanners")
     public ResponseResult<List<ClubBannerDto>> showClubBanners(){
         return clubService.showClubBanners();
     }
@@ -42,5 +38,9 @@ public class ClubController {
     @PreAuthorize("hasAuthority('Club:SetClubBanner')")
     public ResponseResult setClubToBanner(@RequestBody Integer id){
         return clubService.setClubToBanner(id);
+    }
+    @PostMapping("/noAuth/getClubList")
+    public PagedResult<ClubListDto> getClubList(@RequestBody ClubQueryDto dto){
+        return clubService.getClubList(dto);
     }
 }

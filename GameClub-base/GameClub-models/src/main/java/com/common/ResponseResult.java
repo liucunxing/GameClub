@@ -1,7 +1,9 @@
 package com.common;
 
 import lombok.Data;
-
+/*
+ResponseResult<T> {private T data;} 这里用于指定data类型。不指定不同data默认是object，需要转换或者写各种类型的data
+ */
 @Data
 public class ResponseResult<T> {
     private Integer code;
@@ -24,6 +26,9 @@ public class ResponseResult<T> {
         this.code = code;
         this.data = data;
     }
+    /*
+这里前面的T是表示是泛型方法，不加编译报错
+     */
     public static <T> ResponseResult<T> success(T data){
         return new ResponseResult(200,data);
     }

@@ -18,6 +18,9 @@ public class RedisUtils {
     public void set(String key, Object value) {
         redisTemplate.opsForValue().set(key, value);
     }
+    public void set(String key,Object value,long expireTime){
+        redisTemplate.opsForValue().set(key, value, expireTime,TimeUnit.MINUTES);
+    }
 
     public Object get(String key) {
         return redisTemplate.opsForValue().get(key);
