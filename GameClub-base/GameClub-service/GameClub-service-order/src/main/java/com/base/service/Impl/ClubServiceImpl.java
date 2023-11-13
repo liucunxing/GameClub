@@ -31,9 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -157,10 +155,18 @@ public class ClubServiceImpl extends ServiceImpl<ClubMapper, Club> implements IC
 
     @Override
     public PagedResult<ClubListDto> getClubList(ClubQueryDto dto) {
+        String hKey = String.valueOf(dto.getPageIndex()) +'/'+ String.valueOf(dto.getPageSize());
+        Map<String,Object> listCache = (Map)redisUtils.getByHashKey("getClubList", hKey);
+        if( listCache != null){
+            return new PagedResult<>((List<ClubListDto>)listCache.get("listValue"),(long)listCache.get("total"),dto.getPageIndex(), dto.getPageSize());
+        }
         var wrapper = getWrapper(dto);
         Page<ClubListDto> page = new Page<>(dto.getPageIndex(),dto.getPageSize());
         IPage<ClubListDto> pageResult = baseMapper.queryClubList(page,wrapper);
-        SimpleDateFormat formatt = new SimpleDateFormat("yyyy-mm-dd");
+        Map<String,Object> map = new HashMap<>();
+        map.put("listValue",pageResult.getRecords());
+        map.put("total",pageResult.getTotal());
+        redisUtils.hashSet("getClubList",hKey,map,60);
 
         return new PagedResult<>(pageResult.getRecords(), pageResult.getTotal(), dto.getPageIndex(), dto.getPageSize());
     }

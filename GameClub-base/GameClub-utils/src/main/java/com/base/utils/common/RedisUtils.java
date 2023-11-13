@@ -21,7 +21,14 @@ public class RedisUtils {
     public void set(String key,Object value,long expireTime){
         redisTemplate.opsForValue().set(key, value, expireTime,TimeUnit.MINUTES);
     }
+    public void hashSet(String key,String hKey,Object value,long expireTime){
+        redisTemplate.opsForHash().put(key,hKey,value);
+        redisTemplate.expire(key,expireTime,TimeUnit.MINUTES);
+    }
 
+    public Object getByHashKey(String key,String hashKey){
+        return redisTemplate.opsForHash().get(key,hashKey);
+    };
     public Object get(String key) {
         return redisTemplate.opsForValue().get(key);
     }
